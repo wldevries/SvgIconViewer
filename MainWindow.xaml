@@ -6,7 +6,9 @@
         xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
         xmlns:local="clr-namespace:SvgIconViewer"
         mc:Ignorable="d"
-        Title="SVG icon catalog" Height="450" Width="800">
+        Title="SVG icon catalog"
+        FontSize="16"
+        Height="450" Width="800">
 
     <Window.Resources>
 
@@ -76,22 +78,24 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Menu>
+        <Menu FontSize="16">
             <MenuItem Header="_File">
                 <MenuItem Header="_Open catalog…"
                           Click="BrowseSource"/>
+                <MenuItem Header="_Exit"
+                          Click="HandleExit"/>
             </MenuItem>
 
             <MenuItem Header="_View">
                 <MenuItem x:Name="OutlineToggle"
                           IsCheckable="True"
                           Click="ToggleOutline"
-                          Header="Show outline"/>
+                          Header="Show _outline"/>
 
                 <MenuItem x:Name="DarkToggle"
                           IsCheckable="True"
                           Click="ToggleDarkMode"
-                          Header="Dark mode"/>
+                          Header="_Dark mode"/>
             </MenuItem>
         </Menu>
 

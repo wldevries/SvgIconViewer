@@ -142,5 +142,10 @@ namespace SvgIconViewer
             var icon = e.Item as IIconViewModel;
             e.Accepted = icon?.Path.Contains(this.SearchBox.Text, StringComparison.OrdinalIgnoreCase) ?? false;
         }
+
+        private void HandleExit(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }
