@@ -4,9 +4,12 @@
     
     <!-- ImageIcon start -->
     <ControlTemplate x:Key="ImageIconTemplate" TargetType="{x:Type c:ImageIcon}">
-        <Rectangle x:Name="PART_IconRectangle">
+        <Rectangle x:Name="PART_IconRectangle"
+                   VerticalAlignment="Stretch"
+                   HorizontalAlignment="Stretch">
             <Rectangle.OpacityMask>
                 <ImageBrush ImageSource="{Binding Image, RelativeSource={RelativeSource AncestorType={x:Type c:ImageIcon}}}"
+                            Stretch="Uniform"
                             RenderOptions.BitmapScalingMode="Fant" />
             </Rectangle.OpacityMask>
         </Rectangle>
