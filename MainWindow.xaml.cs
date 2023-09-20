@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace SvgIconViewer
@@ -146,6 +147,11 @@ namespace SvgIconViewer
         private void HandleExit(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void FocusSearch(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.SearchBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
         }
     }
 }

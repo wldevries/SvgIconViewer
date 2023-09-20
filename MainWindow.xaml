@@ -8,11 +8,22 @@
         mc:Ignorable="d"
         Title="SVG icon catalog"
         FontSize="16"
-        Height="450" Width="800">
+        Height="450" Width="800"
+        x:Name="window">
+
+    <Window.InputBindings>
+        <KeyBinding Key="F" Modifiers="Ctrl" Command="Search" />
+    </Window.InputBindings>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="Search" Executed="FocusSearch" />
+    </Window.CommandBindings>
 
     <Window.Resources>
 
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <local:BooleanToVisibilityConverter x:Key="BooleanToInvisibleConverter"
+                                            True="Collapsed" False="Visible" />
         <local:OrientationConverter x:Key="OrientationConverter" />
 
         <Style TargetType="Rectangle" x:Key="OutlineRectangle">
@@ -35,7 +46,14 @@
                       Width="{Binding Path=Value, ElementName=IconSizeSlider}"
                       HorizontalAlignment="Left">
                     <Rectangle Style="{StaticResource OutlineRectangle}" />
-                    <Image Source="{Binding Path, Converter={svgc:SvgImageConverter}, IsAsync=True}" />
+
+                    <Image Visibility="{Binding IsChecked, ElementName=OriginalColorsToggle, Converter={StaticResource BooleanToVisibilityConverter}}"
+                           Source="{Binding Path, IsAsync=True, Converter={svgc:SvgImageConverter}}" />
+
+                    <svgc:SvgIcon Visibility="{Binding IsChecked, ElementName=OriginalColorsToggle, Converter={StaticResource BooleanToInvisibleConverter}}"
+                                  UriSource="{Binding Path, IsAsync=True}"
+                                  Stroke="{Binding Foreground, ElementName=window}"
+                                  Fill="{Binding Foreground, ElementName=window}" />
                 </Grid>
 
                 <TextBlock Text="{Binding Name}"
@@ -57,8 +75,14 @@
                       Width="{Binding Path=Value, ElementName=IconSizeSlider}"
                       HorizontalAlignment="Left">
                     <Rectangle Style="{StaticResource OutlineRectangle}" />
-                    <Image Source="{Binding Path, IsAsync=True}"
-                           RenderOptions.BitmapScalingMode="HighQuality"/>
+
+                    <Image Visibility="{Binding IsChecked, ElementName=OriginalColorsToggle, Converter={StaticResource BooleanToVisibilityConverter}}"
+                           Source="{Binding Path, IsAsync=True}" />
+
+                    <local:ImageIcon Visibility="{Binding IsChecked, ElementName=OriginalColorsToggle, Converter={StaticResource BooleanToInvisibleConverter}}"
+                                     Image="{Binding Path, IsAsync=True}"
+                                     Height="{Binding Path=Value, ElementName=IconSizeSlider}"
+                                     Width="{Binding Path=Value, ElementName=IconSizeSlider}" />
                 </Grid>
 
                 <TextBlock Text="{Binding Name}"
@@ -96,6 +120,10 @@
                           IsCheckable="True"
                           Click="ToggleDarkMode"
                           Header="_Dark mode"/>
+
+                <MenuItem x:Name="OriginalColorsToggle"
+                          IsCheckable="True"
+                          Header="Original _colors"/>
             </MenuItem>
         </Menu>
 
