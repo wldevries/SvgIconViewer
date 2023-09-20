@@ -12,11 +12,21 @@
         x:Name="window">
 
     <Window.InputBindings>
-        <KeyBinding Key="F" Modifiers="Ctrl" Command="Search" />
+        <KeyBinding Key="F" Modifiers="Ctrl" Command="Find" />
+        <KeyBinding Key="D" Command="{x:Static local:AppCommands.DarkModeToggle}" />
+        <KeyBinding Key="O" Command="{x:Static local:AppCommands.OutlineToggle}" />
+        <KeyBinding Key="C" Command="{x:Static local:AppCommands.ColorToggle}" />
+        <KeyBinding Key="Add" Command="{x:Static Slider.IncreaseSmall}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
+        <KeyBinding Key="Add" Modifiers="Ctrl" Command="{x:Static Slider.IncreaseLarge}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
+        <KeyBinding Key="Subtract" Command="{x:Static Slider.DecreaseSmall}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
+        <KeyBinding Key="Subtract" Modifiers="Ctrl" Command="{x:Static Slider.DecreaseLarge}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
     </Window.InputBindings>
 
     <Window.CommandBindings>
-        <CommandBinding Command="Search" Executed="FocusSearch" />
+        <CommandBinding Command="Find" Executed="FocusSearch" />
+        <CommandBinding Command="{x:Static local:AppCommands.DarkModeToggle}" Executed="ToggleDarkMode" />
+        <CommandBinding Command="{x:Static local:AppCommands.OutlineToggle}" Executed="ToggleOutline" />
+        <CommandBinding Command="{x:Static local:AppCommands.ColorToggle}" Executed="ToggleColors" />
     </Window.CommandBindings>
 
     <Window.Resources>
@@ -113,12 +123,12 @@
             <MenuItem Header="_View">
                 <MenuItem x:Name="OutlineToggle"
                           IsCheckable="True"
-                          Click="ToggleOutline"
+                          Click="ToggleOutlineClicked"
                           Header="Show _outline"/>
 
                 <MenuItem x:Name="DarkToggle"
                           IsCheckable="True"
-                          Click="ToggleDarkMode"
+                          Click="ToggleDarkModeClicked"
                           Header="_Dark mode"/>
 
                 <MenuItem x:Name="OriginalColorsToggle"
@@ -137,7 +147,9 @@
                     TickPlacement="BottomRight"
                     IsSnapToTickEnabled="True"
                     Minimum="16" Maximum="256"
-                    TickFrequency="4" />
+                    TickFrequency="4"
+                    SmallChange="4"
+                    LargeChange="16" />
 
             <TextBlock Margin="0 8 0 0"
                        FontWeight="SemiBold"

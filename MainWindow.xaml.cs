@@ -30,6 +30,7 @@ namespace SvgIconViewer
 
             this.Loaded += MainWindow_Loaded;
             this.SizeChanged += MainWindow_SizeChanged;
+            this.SearchBox.PreviewKeyDown += SearchBox_PreviewKeyDown;
         }
 
         public CollectionViewSource ViewSource { get; }
@@ -114,14 +115,26 @@ namespace SvgIconViewer
             }
         }
 
-        private void ToggleDarkMode(object sender, RoutedEventArgs e)
+        private void ToggleDarkMode(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.DarkToggle.IsChecked = !this.DarkToggle.IsChecked;
+            this.ToggleDarkModeClicked(sender, e);
+        }
+
+        private void ToggleDarkModeClicked(object sender, RoutedEventArgs e)
         {
             Settings.Default.DarkMode = this.DarkToggle.IsChecked;
             Settings.Default.Save();
             UpdateDarkMade();
         }
 
-        private void ToggleOutline(object sender, RoutedEventArgs e)
+        private void ToggleOutline(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.OutlineToggle.IsChecked = !this.OutlineToggle.IsChecked;
+            this.ToggleOutlineClicked(sender, e);
+        }
+
+        private void ToggleOutlineClicked(object sender, RoutedEventArgs e)
         {
             Settings.Default.ShowOutline = this.OutlineToggle.IsChecked;
             Settings.Default.Save();
@@ -152,6 +165,20 @@ namespace SvgIconViewer
         private void FocusSearch(object sender, ExecutedRoutedEventArgs e)
         {
             this.SearchBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+        }
+
+        private void SearchBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                Keyboard.ClearFocus();
+                e.Handled = true;
+            }
+        }
+
+        private void ToggleColors(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.OriginalColorsToggle.IsChecked = !this.OriginalColorsToggle.IsChecked;
         }
     }
 }
