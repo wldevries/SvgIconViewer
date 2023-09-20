@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace SvgIconViewer;
+namespace IconCatalog;
 
 /// <summary>
 /// Converter that takes a boolean as input and returns one of two properties: True or False

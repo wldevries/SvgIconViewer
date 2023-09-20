@@ -1,4 +1,4 @@
-﻿namespace SvgIconViewer
+﻿namespace IconCatalog
 {
     public interface IIconViewModel
     {

@@ -1,7 +1,7 @@
-﻿<Application x:Class="SvgIconViewer.App"
+﻿<Application x:Class="IconCatalog.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:SvgIconViewer"
+             xmlns:local="clr-namespace:IconCatalog"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

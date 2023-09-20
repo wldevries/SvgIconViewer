@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:c="clr-namespace:SvgIconViewer">
+                    xmlns:c="clr-namespace:IconCatalog">
     
     <!-- ImageIcon start -->
     <ControlTemplate x:Key="ImageIconTemplate" TargetType="{x:Type c:ImageIcon}">

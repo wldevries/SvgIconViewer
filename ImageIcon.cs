@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace SvgIconViewer;
+namespace IconCatalog;
 
 /// <summary>
 /// Icon control based on the opacity layer of an image. The icon fill color is determined by the Foreground property.

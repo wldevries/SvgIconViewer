@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace SvgIconViewer;
+namespace IconCatalog;
 
 public static class AppCommands
 {

@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace SvgIconViewer;
+namespace IconCatalog;
 
 internal class OrientationConverter : IValueConverter
 {

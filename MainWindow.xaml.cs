@@ -1,5 +1,5 @@
-﻿using Ookii.Dialogs.Wpf;
-using SvgIconViewer.Properties;
+﻿using IconCatalog.Properties;
+using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,14 +9,17 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
-namespace SvgIconViewer
+namespace IconCatalog
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly DispatcherTimer UpdateFindTimer;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -28,9 +31,15 @@ namespace SvgIconViewer
             this.Width = Settings.Default.WindowWidth;
             this.Height = Settings.Default.WindowHeight;
 
+            this.UpdateFindTimer = new DispatcherTimer(
+                TimeSpan.FromMilliseconds(200),
+                DispatcherPriority.Normal,
+                UpdateView,
+                this.Dispatcher);
+
             this.Loaded += MainWindow_Loaded;
             this.SizeChanged += MainWindow_SizeChanged;
-            this.SearchBox.PreviewKeyDown += SearchBox_PreviewKeyDown;
+            this.FindBox.PreviewKeyDown += FindBox_PreviewKeyDown;
         }
 
         public CollectionViewSource ViewSource { get; }
@@ -78,6 +87,8 @@ namespace SvgIconViewer
                 this.ViewSource.Source = vms;
 
                 this.iconList.ItemsSource = ViewSource.View;
+
+                this.Title = $"Icon Catalog - {dir.FullName}";
                 return true;
             }
             catch (Exception e)
@@ -108,7 +119,7 @@ namespace SvgIconViewer
             {
                 if (this.LoadIcons(dialog.SelectedPath))
                 {
-                    this.SearchBox.Text = string.Empty;
+                    this.FindBox.Text = string.Empty;
                     Settings.Default.CatalogPath = dialog.SelectedPath;
                     Settings.Default.Save();
                 }
@@ -146,15 +157,29 @@ namespace SvgIconViewer
             Settings.Default.Save();
         }
 
-        private void UpdateSearch(object sender, TextChangedEventArgs e)
+        private void UpdateFind(object sender, TextChangedEventArgs e)
         {
+            this.UpdateFindTimer.Stop();
+            this.UpdateFindTimer.Start();
+        }
+
+        private void UpdateView(object? sender, EventArgs e)
+        {
+            this.UpdateFindTimer.Stop();
             this.ViewSource.View.Refresh();
         }
 
         private void ViewSource_Filter(object sender, FilterEventArgs e)
         {
             var icon = e.Item as IIconViewModel;
-            e.Accepted = icon?.Path.Contains(this.SearchBox.Text, StringComparison.OrdinalIgnoreCase) ?? false;
+            if (icon is null)
+            {
+                e.Accepted = false;
+                return;
+            }
+
+            var terms = this.FindBox.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            e.Accepted = terms.All(term => icon.Path.Contains(term, StringComparison.OrdinalIgnoreCase));
         }
 
         private void HandleExit(object sender, RoutedEventArgs e)
@@ -162,16 +187,20 @@ namespace SvgIconViewer
             this.Close();
         }
 
-        private void FocusSearch(object sender, ExecutedRoutedEventArgs e)
+        private void FocusFind(object sender, ExecutedRoutedEventArgs e)
         {
-            this.SearchBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+            this.FindLabel.Visibility = Visibility.Visible;
+            this.FindBox.Visibility = Visibility.Visible;
+            this.FindBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
         }
 
-        private void SearchBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void FindBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {
-                Keyboard.ClearFocus();
+                this.FindBox.Text = string.Empty;
+                this.FindLabel.Visibility = Visibility.Collapsed;
+                this.FindBox.Visibility = Visibility.Collapsed;
                 e.Handled = true;
             }
         }
@@ -179,6 +208,16 @@ namespace SvgIconViewer
         private void ToggleColors(object sender, ExecutedRoutedEventArgs e)
         {
             this.OriginalColorsToggle.IsChecked = !this.OriginalColorsToggle.IsChecked;
+        }
+
+        private void FindLostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(this.FindBox.Text))
+            {
+                this.FindBox.Text = string.Empty;
+                this.FindLabel.Visibility = Visibility.Collapsed;
+                this.FindBox.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }

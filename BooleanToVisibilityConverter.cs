@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace SvgIconViewer;
+namespace IconCatalog;
 
 /// <summary>
 /// Configurable converter that converts a boolean to <see cref="Visibility"/>.

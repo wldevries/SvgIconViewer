@@ -1,7 +1,7 @@
 ﻿using Humanizer;
 using System;
 
-namespace SvgIconViewer;
+namespace IconCatalog;
 
 public class SvgIconViewModel : IIconViewModel
 {
