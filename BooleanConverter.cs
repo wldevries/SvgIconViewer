@@ -23,7 +23,9 @@ public abstract class BooleanConverter<T> : IValueConverter
     {
         return value switch
         {
-            bool boolean => boolean ? this.True : this.False,
+            bool boolean => boolean
+                ? this.True ?? DependencyProperty.UnsetValue
+                : this.False ?? DependencyProperty.UnsetValue,
             _ => DependencyProperty.UnsetValue
         };
     }
