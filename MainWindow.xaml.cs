@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -19,12 +20,18 @@ namespace SvgIconViewer
         {
             InitializeComponent();
 
+            this.ViewSource = new();
+            this.ViewSource.GroupDescriptions.Add(new PropertyGroupDescription("Collection"));
+            this.ViewSource.Filter += ViewSource_Filter;
+
             this.Width = Settings.Default.WindowWidth;
             this.Height = Settings.Default.WindowHeight;
 
             this.Loaded += MainWindow_Loaded;
             this.SizeChanged += MainWindow_SizeChanged;
         }
+
+        public CollectionViewSource ViewSource { get; }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -66,13 +73,9 @@ namespace SvgIconViewer
                         vms.Add(new RasterIconViewModel(icon.FullName));
                 }
 
-                CollectionViewSource viewSource = new()
-                {
-                    Source = vms
-                };
-                viewSource.GroupDescriptions.Add(new PropertyGroupDescription("Collection"));
+                this.ViewSource.Source = vms;
 
-                this.iconList.ItemsSource = viewSource.View;
+                this.iconList.ItemsSource = ViewSource.View;
                 return true;
             }
             catch (Exception e)
@@ -103,6 +106,7 @@ namespace SvgIconViewer
             {
                 if (this.LoadIcons(dialog.SelectedPath))
                 {
+                    this.SearchBox.Text = string.Empty;
                     Settings.Default.CatalogPath = dialog.SelectedPath;
                     Settings.Default.Save();
                 }
@@ -126,6 +130,17 @@ namespace SvgIconViewer
         {
             Settings.Default.IconSize = (int)this.IconSizeSlider.Value;
             Settings.Default.Save();
+        }
+
+        private void UpdateSearch(object sender, TextChangedEventArgs e)
+        {
+            this.ViewSource.View.Refresh();
+        }
+
+        private void ViewSource_Filter(object sender, FilterEventArgs e)
+        {
+            var icon = e.Item as IIconViewModel;
+            e.Accepted = icon?.Path.Contains(this.SearchBox.Text, StringComparison.OrdinalIgnoreCase) ?? false;
         }
     }
 }

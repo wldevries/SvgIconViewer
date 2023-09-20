@@ -33,7 +33,7 @@
                       Width="{Binding Path=Value, ElementName=IconSizeSlider}"
                       HorizontalAlignment="Left">
                     <Rectangle Style="{StaticResource OutlineRectangle}" />
-                    <Image Source="{Binding Path, Converter={svgc:SvgImageConverter}, IsAsync=True, Delay=100}" />
+                    <Image Source="{Binding Path, Converter={svgc:SvgImageConverter}, IsAsync=True}" />
                 </Grid>
 
                 <TextBlock Text="{Binding Name}"
@@ -55,7 +55,8 @@
                       Width="{Binding Path=Value, ElementName=IconSizeSlider}"
                       HorizontalAlignment="Left">
                     <Rectangle Style="{StaticResource OutlineRectangle}" />
-                    <Image Source="{Binding Path, IsAsync=True, Delay=100}" />
+                    <Image Source="{Binding Path, IsAsync=True}"
+                           RenderOptions.BitmapScalingMode="HighQuality"/>
                 </Grid>
 
                 <TextBlock Text="{Binding Name}"
@@ -93,19 +94,26 @@
                           Header="Dark mode"/>
             </MenuItem>
         </Menu>
-        
-        <DockPanel Grid.Row="1" Margin="24,24,24,0">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="{Binding Value, ElementName=IconSizeSlider, StringFormat=Size {0} px}"/>
-                <Slider x:Name="IconSizeSlider"
-                        Value="32"
-                        ValueChanged="SaveIconSize"
-                        TickPlacement="BottomRight"
-                        IsSnapToTickEnabled="True"
-                        Minimum="16" Maximum="256"
-                        TickFrequency="4" />
-            </StackPanel>
-        </DockPanel>
+
+        <StackPanel Grid.Row="1" Margin="24,24,24,0"
+                    Orientation="Vertical">
+            <TextBlock Text="{Binding Value, ElementName=IconSizeSlider, StringFormat=Size {0} px}"
+                       FontWeight="SemiBold" />
+            <Slider x:Name="IconSizeSlider"
+                    Value="32"
+                    ValueChanged="SaveIconSize"
+                    TickPlacement="BottomRight"
+                    IsSnapToTickEnabled="True"
+                    Minimum="16" Maximum="256"
+                    TickFrequency="4" />
+
+            <TextBlock Margin="0 8 0 0"
+                       FontWeight="SemiBold"
+                       Text="Search"/>
+            <TextBox x:Name="SearchBox"
+                     TextChanged="UpdateSearch"
+                     Padding="8 4"/>
+        </StackPanel>
 
         <ScrollViewer Grid.Row="2">
             <ItemsControl x:Name="iconList"
