@@ -9,6 +9,7 @@ public class RasterIconViewModel : IIconViewModel
     {
         this.Path = fullPath;
         this.Name = System.IO.Path.GetFileNameWithoutExtension(fullPath)
+            .Replace("icons", "", StringComparison.InvariantCultureIgnoreCase)
             .Replace("icon", "", StringComparison.InvariantCultureIgnoreCase)
             .Humanize();
         this.Collection = System.IO.Path.GetDirectoryName(fullPath);
