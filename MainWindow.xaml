@@ -16,10 +16,16 @@
         <KeyBinding Key="D" Modifiers="Ctrl" Command="{x:Static local:AppCommands.DarkModeToggle}" />
         <KeyBinding Key="O" Modifiers="Ctrl" Command="{x:Static local:AppCommands.OutlineToggle}" />
         <KeyBinding Key="C" Modifiers="Ctrl" Command="{x:Static local:AppCommands.ColorToggle}" />
-        <KeyBinding Key="Add" Modifiers="Ctrl" Command="{x:Static Slider.IncreaseSmall}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
+
         <KeyBinding Key="Add" Modifiers="Ctrl+Alt" Command="{x:Static Slider.IncreaseLarge}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
-        <KeyBinding Key="Subtract" Modifiers="Ctrl" Command="{x:Static Slider.DecreaseSmall}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
+        <KeyBinding Key="Add" Modifiers="Ctrl" Command="{x:Static Slider.IncreaseSmall}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
         <KeyBinding Key="Subtract" Modifiers="Ctrl+Alt" Command="{x:Static Slider.DecreaseLarge}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
+        <KeyBinding Key="Subtract" Modifiers="Ctrl" Command="{x:Static Slider.DecreaseSmall}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
+
+        <MouseBinding Gesture="{x:Static local:MouseWheelGesture.CtrlAltUp}" Command="{x:Static Slider.IncreaseLarge}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
+        <MouseBinding Gesture="{x:Static local:MouseWheelGesture.CtrlUp}" Command="{x:Static Slider.IncreaseSmall}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
+        <MouseBinding Gesture="{x:Static local:MouseWheelGesture.CtrlAltDown}" Command="{x:Static Slider.DecreaseLarge}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
+        <MouseBinding Gesture="{x:Static local:MouseWheelGesture.CtrlDown}" Command="{x:Static Slider.DecreaseSmall}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
     </Window.InputBindings>
 
     <Window.CommandBindings>
@@ -173,7 +179,8 @@
                      Padding="8 4"/>
         </StackPanel>
 
-        <ScrollViewer Grid.Row="2">
+        <ScrollViewer Grid.Row="2"
+                      PreviewMouseWheel="ScrollPreviewMouseWheel">
             <ItemsControl x:Name="iconList"
                           Margin="24"
                           ItemsPanel="{StaticResource WrapPanelTemplate}">

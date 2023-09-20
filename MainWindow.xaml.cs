@@ -219,5 +219,22 @@ namespace IconCatalog
                 this.FindBox.Visibility = Visibility.Collapsed;
             }
         }
+
+        private void ScrollPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            {
+                double change = this.IconSizeSlider.SmallChange;
+
+                if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
+                {
+                    change = this.IconSizeSlider.LargeChange;
+                }
+
+                // Mouse wheel delta is always 120
+                this.IconSizeSlider.Value += change * e.Delta / 120;
+                e.Handled = true;
+            }
+        }
     }
 }
