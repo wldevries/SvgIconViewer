@@ -22,8 +22,8 @@
         <ItemsPanelTemplate x:Key="WrapPanelTemplate">
             <WrapPanel />
         </ItemsPanelTemplate>
-        
-        <DataTemplate x:Key="IconTemplate">
+
+        <DataTemplate DataType="{x:Type local:SvgIconViewModel}">
             <StackPanel Margin="4"
                         Orientation="{Binding Path=Value,
                                               ElementName=IconSizeSlider,
@@ -33,11 +33,32 @@
                       Width="{Binding Path=Value, ElementName=IconSizeSlider}"
                       HorizontalAlignment="Left">
                     <Rectangle Style="{StaticResource OutlineRectangle}" />
-                    <Image Source="{Binding Path, Converter={svgc:SvgImageConverter}}" />
+                    <Image Source="{Binding Path, Converter={svgc:SvgImageConverter}, IsAsync=True, Delay=100}" />
                 </Grid>
 
                 <TextBlock Text="{Binding Name}"
-                           Foreground="#333333"
+                           FontWeight="SemiBold"
+                           Margin="4"
+                           Width="150"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type local:RasterIconViewModel}">
+            <StackPanel Margin="4"
+                        Orientation="{Binding Path=Value,
+                                              ElementName=IconSizeSlider,
+                                              Converter={StaticResource OrientationConverter},
+                                              ConverterParameter=100}">
+                <Grid Height="{Binding Path=Value, ElementName=IconSizeSlider}"
+                      Width="{Binding Path=Value, ElementName=IconSizeSlider}"
+                      HorizontalAlignment="Left">
+                    <Rectangle Style="{StaticResource OutlineRectangle}" />
+                    <Image Source="{Binding Path, IsAsync=True, Delay=100}" />
+                </Grid>
+
+                <TextBlock Text="{Binding Name}"
                            FontWeight="SemiBold"
                            Margin="4"
                            Width="150"
@@ -63,8 +84,13 @@
             <MenuItem Header="_View">
                 <MenuItem x:Name="OutlineToggle"
                           IsCheckable="True"
-                          IsChecked="True"
+                          Click="ToggleOutline"
                           Header="Show outline"/>
+
+                <MenuItem x:Name="DarkToggle"
+                          IsCheckable="True"
+                          Click="ToggleDarkMode"
+                          Header="Dark mode"/>
             </MenuItem>
         </Menu>
         
@@ -73,6 +99,7 @@
                 <TextBlock Text="{Binding Value, ElementName=IconSizeSlider, StringFormat=Size {0} px}"/>
                 <Slider x:Name="IconSizeSlider"
                         Value="32"
+                        ValueChanged="SaveIconSize"
                         TickPlacement="BottomRight"
                         IsSnapToTickEnabled="True"
                         Minimum="16" Maximum="256"
@@ -83,7 +110,6 @@
         <ScrollViewer Grid.Row="2">
             <ItemsControl x:Name="iconList"
                           Margin="24"
-                          ItemTemplate="{StaticResource IconTemplate}"
                           ItemsPanel="{StaticResource WrapPanelTemplate}">
                 <ItemsControl.GroupStyle>
                     <GroupStyle>
@@ -92,7 +118,9 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type GroupItem}">
-                                            <GroupBox Header="{Binding Name}" Margin="0 8">
+                                            <GroupBox Header="{Binding Name}"
+                                                      Margin="0 8"
+                                                      SnapsToDevicePixels="True">
                                                 <ItemsPresenter/>
                                             </GroupBox>
                                         </ControlTemplate>

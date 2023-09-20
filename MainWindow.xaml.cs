@@ -1,7 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Ookii.Dialogs.Wpf;
+using SvgIconViewer.Properties;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace SvgIconViewer
 {
@@ -13,34 +18,114 @@ namespace SvgIconViewer
         public MainWindow()
         {
             InitializeComponent();
+
+            this.Width = Settings.Default.WindowWidth;
+            this.Height = Settings.Default.WindowHeight;
+
+            this.Loaded += MainWindow_Loaded;
+            this.SizeChanged += MainWindow_SizeChanged;
         }
 
-        private void LoadIcons(string text)
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            DirectoryInfo dir = new(text);
-            var svgs = dir.GetFiles("*.svg", SearchOption.AllDirectories);
-            List<IconViewModel> vms = new();
-            foreach (var svg in svgs)
+            this.UpdateDarkMade();
+            this.OutlineToggle.IsChecked = Settings.Default.ShowOutline;
+            this.IconSizeSlider.Value = Settings.Default.IconSize;
+            this.LoadIcons(Settings.Default.CatalogPath);
+        }
+
+        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Settings.Default.WindowWidth = this.Width;
+            Settings.Default.WindowHeight = this.Height;
+            Settings.Default.Save();
+        }
+
+        private bool LoadIcons(string text)
+        {
+            try
             {
-                vms.Add(new IconViewModel(svg.FullName));
+                DirectoryInfo dir = new(text);
+                if (!dir.Exists)
+                {
+                    return false;
+                }
+
+                var icons = dir.GetFiles("*.svg", SearchOption.AllDirectories)
+                    .Concat(dir.GetFiles("*.png", SearchOption.AllDirectories))
+                    .OrderBy(f => f.FullName);
+
+                List<IIconViewModel> vms = new();
+                foreach (var icon in icons)
+                {
+                    if (icon.Extension.ToLower() is ".svg")
+                    {
+                        vms.Add(new SvgIconViewModel(icon.FullName));
+                    }
+                    else
+                        vms.Add(new RasterIconViewModel(icon.FullName));
+                }
+
+                CollectionViewSource viewSource = new()
+                {
+                    Source = vms
+                };
+                viewSource.GroupDescriptions.Add(new PropertyGroupDescription("Collection"));
+
+                this.iconList.ItemsSource = viewSource.View;
+                return true;
             }
-
-            CollectionViewSource viewSource = new()
+            catch (Exception e)
             {
-                Source = vms
-            };
-            viewSource.GroupDescriptions.Add(new PropertyGroupDescription("Collection"));
+                MessageBox.Show("Failed to load icons." + Environment.NewLine + e.ToString());
+                return false;
+            }
+        }
 
-            this.iconList.ItemsSource = viewSource.View;
+        private void UpdateDarkMade()
+        {
+            if (this.DarkToggle.IsChecked)
+            {
+                this.Background = new SolidColorBrush(Color.FromRgb(0x33, 0x33, 0x33));
+                this.Foreground = Brushes.White;
+            }
+            else
+            {
+                this.Background = Brushes.White;
+                this.Foreground = Brushes.Black;
+            }
         }
 
         private void BrowseSource(object sender, RoutedEventArgs e)
         {
-            Ookii.Dialogs.Wpf.VistaFolderBrowserDialog dialog = new();
+            VistaFolderBrowserDialog dialog = new();
             if (dialog.ShowDialog(this).GetValueOrDefault())
             {
-                this.LoadIcons(dialog.SelectedPath);
+                if (this.LoadIcons(dialog.SelectedPath))
+                {
+                    Settings.Default.CatalogPath = dialog.SelectedPath;
+                    Settings.Default.Save();
+                }
             }
+        }
+
+        private void ToggleDarkMode(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.DarkMode = this.DarkToggle.IsChecked;
+            Settings.Default.Save();
+            UpdateDarkMade();
+        }
+
+        private void ToggleOutline(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.ShowOutline = this.OutlineToggle.IsChecked;
+            Settings.Default.Save();
+        }
+
+        private void SaveIconSize(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Settings.Default.IconSize = (int)this.IconSizeSlider.Value;
+            Settings.Default.Save();
         }
     }
 }

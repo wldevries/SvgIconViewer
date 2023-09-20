@@ -2,9 +2,9 @@
 
 namespace SvgIconViewer;
 
-public class IconViewModel
+public class RasterIconViewModel : IIconViewModel
 {
-    public IconViewModel(string fullPath)
+    public RasterIconViewModel(string fullPath)
     {
         this.Path = fullPath;
         this.Name = System.IO.Path.GetFileNameWithoutExtension(fullPath).Humanize();
