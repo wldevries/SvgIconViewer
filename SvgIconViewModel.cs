@@ -1,21 +1,8 @@
-﻿using Humanizer;
-using System;
+﻿namespace IconCatalog;
 
-namespace IconCatalog;
-
-public class SvgIconViewModel : IIconViewModel
+public class SvgIconViewModel : IconViewModel
 {
-    public SvgIconViewModel(string fullPath)
+    public SvgIconViewModel(string fullPath) : base(fullPath)
     {
-        this.Path = fullPath;
-        this.Name = System.IO.Path.GetFileNameWithoutExtension(fullPath)
-            .Replace("icons", "", StringComparison.InvariantCultureIgnoreCase)
-            .Replace("icon", "", StringComparison.InvariantCultureIgnoreCase)
-            .Humanize();
-        this.Collection = System.IO.Path.GetDirectoryName(fullPath);
     }
-
-    public string Path { get; set; }
-    public string? Collection { get; set; }
-    public string Name { get; set; }
 }

@@ -73,15 +73,13 @@ namespace IconCatalog
                     .Concat(dir.GetFiles("*.png", SearchOption.AllDirectories))
                     .OrderBy(f => f.FullName);
 
-                List<IIconViewModel> vms = new();
+                List<IconViewModel> vms = new();
                 foreach (var icon in icons)
                 {
-                    if (icon.Extension.ToLower() is ".svg")
-                    {
-                        vms.Add(new SvgIconViewModel(icon.FullName));
-                    }
-                    else
-                        vms.Add(new RasterIconViewModel(icon.FullName));
+                    IconViewModel vm = icon.Extension.ToLower() is ".svg"
+                        ? new SvgIconViewModel(icon.FullName)
+                        : new RasterIconViewModel(icon.FullName);
+                    vms.Add(vm);
                 }
 
                 this.ViewSource.Source = vms;
@@ -171,7 +169,7 @@ namespace IconCatalog
 
         private void ViewSource_Filter(object sender, FilterEventArgs e)
         {
-            var icon = e.Item as IIconViewModel;
+            var icon = e.Item as IconViewModel;
             if (icon is null)
             {
                 e.Accepted = false;
@@ -218,6 +216,11 @@ namespace IconCatalog
                 this.FindLabel.Visibility = Visibility.Collapsed;
                 this.FindBox.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void ToggleHumanizer(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.HumanizerToggle.IsChecked = !this.HumanizerToggle.IsChecked;
         }
 
         private void ScrollPreviewMouseWheel(object sender, MouseWheelEventArgs e)

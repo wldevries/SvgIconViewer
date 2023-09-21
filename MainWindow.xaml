@@ -13,9 +13,10 @@
 
     <Window.InputBindings>
         <KeyBinding Key="F" Modifiers="Ctrl" Command="Find" />
-        <KeyBinding Key="D" Modifiers="Ctrl" Command="{x:Static local:AppCommands.DarkModeToggle}" />
-        <KeyBinding Key="O" Modifiers="Ctrl" Command="{x:Static local:AppCommands.OutlineToggle}" />
-        <KeyBinding Key="C" Modifiers="Ctrl" Command="{x:Static local:AppCommands.ColorToggle}" />
+        <KeyBinding Key="D" Modifiers="Ctrl" Command="{x:Static local:AppCommands.ToggleDarkMode}" />
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="{x:Static local:AppCommands.ToggleOutline}" />
+        <KeyBinding Key="C" Modifiers="Ctrl" Command="{x:Static local:AppCommands.ToggleColor}" />
+        <KeyBinding Key="H" Modifiers="Ctrl" Command="{x:Static local:AppCommands.ToggleHumanizer}" />
 
         <KeyBinding Key="Add" Modifiers="Ctrl+Alt" Command="{x:Static Slider.IncreaseLarge}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
         <KeyBinding Key="Add" Modifiers="Ctrl" Command="{x:Static Slider.IncreaseSmall}" CommandTarget="{Binding ElementName=IconSizeSlider}" />
@@ -31,9 +32,10 @@
     <Window.CommandBindings>
         <CommandBinding Command="Open" Executed="BrowseSource" />
         <CommandBinding Command="Find" Executed="FocusFind" />
-        <CommandBinding Command="{x:Static local:AppCommands.DarkModeToggle}" Executed="ToggleDarkMode" />
-        <CommandBinding Command="{x:Static local:AppCommands.OutlineToggle}" Executed="ToggleOutline" />
-        <CommandBinding Command="{x:Static local:AppCommands.ColorToggle}" Executed="ToggleColors" />
+        <CommandBinding Command="{x:Static local:AppCommands.ToggleDarkMode}" Executed="ToggleDarkMode" />
+        <CommandBinding Command="{x:Static local:AppCommands.ToggleOutline}" Executed="ToggleOutline" />
+        <CommandBinding Command="{x:Static local:AppCommands.ToggleColor}" Executed="ToggleColors" />
+        <CommandBinding Command="{x:Static local:AppCommands.ToggleHumanizer}" Executed="ToggleHumanizer" />
     </Window.CommandBindings>
 
     <Window.Resources>
@@ -74,6 +76,15 @@
                 </Grid>
 
                 <TextBlock Text="{Binding Name}"
+                           Visibility="{Binding Path=IsChecked, ElementName=HumanizerToggle, Converter={StaticResource BooleanToVisibilityConverter}}"
+                           FontWeight="SemiBold"
+                           Margin="4"
+                           Width="150"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock Text="{Binding FileName}"
+                           Visibility="{Binding Path=IsChecked, ElementName=HumanizerToggle, Converter={StaticResource BooleanToInvisibleConverter}}"
                            FontWeight="SemiBold"
                            Margin="4"
                            Width="150"
@@ -103,6 +114,15 @@
                 </Grid>
 
                 <TextBlock Text="{Binding Name}"
+                           Visibility="{Binding Path=IsChecked, ElementName=HumanizerToggle, Converter={StaticResource BooleanToVisibilityConverter}}"
+                           FontWeight="SemiBold"
+                           Margin="4"
+                           Width="150"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock Text="{Binding FileName}"
+                           Visibility="{Binding Path=IsChecked, ElementName=HumanizerToggle, Converter={StaticResource BooleanToInvisibleConverter}}"
                            FontWeight="SemiBold"
                            Margin="4"
                            Width="150"
@@ -146,6 +166,11 @@
                           InputGestureText="Ctrl+C"
                           IsCheckable="True"
                           Header="Original _colors"/>
+
+                <MenuItem x:Name="HumanizerToggle"
+                          InputGestureText="Ctrl+H"
+                          IsCheckable="True"
+                          Header="_Humanize icon names"/>
 
                 <Separator />
 

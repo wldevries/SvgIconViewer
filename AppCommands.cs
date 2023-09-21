@@ -4,7 +4,8 @@ namespace IconCatalog;
 
 public static class AppCommands
 {
-    public static RoutedCommand DarkModeToggle { get; } = new(nameof(DarkModeToggle), typeof(AppCommands));
-    public static RoutedCommand OutlineToggle { get; } = new(nameof(OutlineToggle), typeof(AppCommands));
-    public static RoutedCommand ColorToggle { get; } = new(nameof(DarkModeToggle), typeof(AppCommands));
+    public static RoutedCommand ToggleDarkMode { get; } = new(nameof(ToggleDarkMode), typeof(AppCommands));
+    public static RoutedCommand ToggleOutline { get; } = new(nameof(ToggleOutline), typeof(AppCommands));
+    public static RoutedCommand ToggleColor { get; } = new(nameof(ToggleColor), typeof(AppCommands));
+    public static RoutedCommand ToggleHumanizer { get; } = new(nameof(ToggleHumanizer), typeof(AppCommands));
 }
